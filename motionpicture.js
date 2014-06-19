@@ -100,6 +100,8 @@
         }
       };
       animObj.calibrate();
+
+      // Configurable events
       animObj.addEvents(animObj.el);
       return animObj;
     }
