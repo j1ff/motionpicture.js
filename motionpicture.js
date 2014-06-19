@@ -1,22 +1,7 @@
-(function($) {
-  $.fn.motionPicture2 = function() {
-    return this.each( function() {
-      $(this).text("Hello, World!");
-    });
-  }
-
-}(jQuery));
-
 (function($){
   $.fn.motionPicture = function(options){
     var $window = $(window),
-    animations = [];
-
-    $(window).on('scroll', function(e) {
-      animations.map(function(item) {
-        item.setSprite();
-      });
-    });
+      animations = []
 
     var assembled = animationFactory(this, options);
     animations.push(assembled);
@@ -25,7 +10,7 @@
     function animationFactory($el, config) {
       var defaults = {
         startLogic: $(window).height(),
-        endLogic: $('html').height(),
+        endLogic: $('html').height() - 1,
         focalPoint: $(window).scrollTop() + $(window).height()
       };
       var animationConfig = $.extend(defaults, config);
@@ -40,6 +25,7 @@
         startLogic: animationConfig.startLogic,
         endLogic: animationConfig.endLogic,
         dynamicPlacement: animationConfig.dynamicPlacement,
+        events: [{'event': 'scroll', 'target': $(window)}],
 
         getEnd: function() {
           return (typeof this.endLogic === 'function') ? this.endLogic() : this.endLogic;
@@ -49,14 +35,11 @@
         },
 
         setSprite: function() {
-          console.log(this.startLogic);
-          console.log(this.endLogic);
           if (this.dynamicPlacement) {
             this.calibrate();
           }
 
           var $el = this.el,
-
             focalPoint = $(window).scrollTop() + $(window).height(),
             animStart = $el.data('animation-start'),
             animEnd = $el.data('animation-end');
@@ -78,6 +61,15 @@
           else {
             this.setAnimationStep(animEnd + 1);
           }
+        },
+
+        addEvents: function(el) {
+          self = this;
+          $.each(self.events, function() {
+            $(this.target).on(this.event, function() {
+              self.setSprite();
+            });
+          });
         },
 
         calibrate: function() {
@@ -108,6 +100,7 @@
         }
       };
       animObj.calibrate();
+      animObj.addEvents(animObj.el);
       return animObj;
     }
   }
