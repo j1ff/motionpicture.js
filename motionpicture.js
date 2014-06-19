@@ -5,7 +5,7 @@
 
     var assembled = animationFactory(this, options);
     animations.push(assembled);
-    return assembled;
+    return this;
 
     function animationFactory($el, config) {
       var defaults = {
@@ -26,6 +26,7 @@
         endLogic: animationConfig.endLogic,
         dynamicPlacement: animationConfig.dynamicPlacement,
         events: [{'event': 'scroll', 'target': $(window)}],
+        hideOnComplete: true,
 
         getEnd: function() {
           return (typeof this.endLogic === 'function') ? this.endLogic() : this.endLogic;
@@ -82,21 +83,23 @@
           this.step = stepInt > 9 ? stepInt : "0" + stepInt;
           this.el.attr('class', '');
           this.el.addClass(this.baseClass + this.step);
-          if (this.step < 1 || this.step > this.steps) {
-            this.hide();
-          }
-          else {
-            this.unhide();
+          if (this.hideOnComplete) {
+            if (this.step < 1 || this.step > this.steps) {
+              this.hide();
+            }
+            else {
+              this.unhide();
+            }
           }
         },
         addClass: function(newClass) {
           this.el.addClass(newClass);
         },
         hide: function() {
-          this.el.addClass('animation-hidden');
+          this.el.hide();
         },
         unhide: function() {
-          this.el.removeClass('animation-hidden');
+          this.el.show();
         }
       };
       animObj.calibrate();
