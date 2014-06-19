@@ -11,7 +11,8 @@
       var defaults = {
         startLogic: $(window).height(),
         endLogic: $('html').height() - 1,
-        focalPoint: $(window).scrollTop() + $(window).height()
+        focalPoint: $(window).scrollTop() + $(window).height(),
+        hideOnComplete: true
       };
       var animationConfig = $.extend(defaults, config);
       var animObj = {
@@ -26,7 +27,8 @@
         endLogic: animationConfig.endLogic,
         dynamicPlacement: animationConfig.dynamicPlacement,
         events: [{'event': 'scroll', 'target': $(window)}],
-        hideOnComplete: true,
+        currentClass: '',
+        hideOnComplete: animationConfig.hideOnComplete,
 
         getEnd: function() {
           return (typeof this.endLogic === 'function') ? this.endLogic() : this.endLogic;
@@ -82,7 +84,8 @@
           var stepInt = parseInt(step);
           this.step = stepInt > 9 ? stepInt : "0" + stepInt;
           this.el.attr('class', '');
-          this.el.addClass(this.baseClass + this.step);
+          this.addClass(this.baseClass + this.step);
+          console.log(this.hideOnComplete);
           if (this.hideOnComplete) {
             if (this.step < 1 || this.step > this.steps) {
               this.hide();
@@ -94,9 +97,12 @@
         },
         addClass: function(newClass) {
           this.el.addClass(newClass);
+          this.currentClass = newClass;
         },
         hide: function() {
           this.el.hide();
+          this.el.removeClass(this.currentClass);
+          this.currentClass = '';
         },
         unhide: function() {
           this.el.show();
