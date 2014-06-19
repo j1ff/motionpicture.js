@@ -1,29 +1,32 @@
+(function($) {
+  $.fn.motionPicture2 = function() {
+    return this.each( function() {
+      $(this).text("Hello, World!");
+    });
+  }
+
+}(jQuery));
+
 (function($){
-  $.fn.motionpicure = function(options){
-    var $window = $(window);
-    //
-    // Animate each animation on scroll.
-    // TODO: implement system that allows end user what events trigger animation progression.
-    $window.on('scroll', function(e) {
+  $.fn.motionPicture = function(options){
+    var $window = $(window),
+    animations = [];
+
+    $(window).on('scroll', function(e) {
       animations.map(function(item) {
         item.setSprite();
       });
     });
 
-    // Adjust the start/end points for animations whenever it the window is resized.
-    $(window).on('resize', function(e) {
-      animations.map(function(item) {
-        item.calibrate();
-      });
-    });
+    var assembled = animationFactory(this, options);
+    animations.push(assembled);
+    return assembled;
 
     function animationFactory($el, config) {
       var defaults = {
-        startlogic: -1000,
-        endLogic: -1000,
-        dynamicPlacement: false,
-        reverseAnimation: false,
-        useWindowFront: false
+        startLogic: $(window).height(),
+        endLogic: $('html').height(),
+        focalPoint: $(window).scrollTop() + $(window).height()
       };
       var animationConfig = $.extend(defaults, config);
       var animObj = {
@@ -31,14 +34,12 @@
         step: 0,
         count: 0,
         el: $el,
-        baseClass: $el.data('animation-class'),
-        steps: $el.data('animation-steps'),
+        baseClass: animationConfig.baseClass,
+        steps: animationConfig.steps,
         hidden: false,
         startLogic: animationConfig.startLogic,
         endLogic: animationConfig.endLogic,
         dynamicPlacement: animationConfig.dynamicPlacement,
-
-
 
         getEnd: function() {
           return (typeof this.endLogic === 'function') ? this.endLogic() : this.endLogic;
@@ -48,14 +49,15 @@
         },
 
         setSprite: function() {
-          // TODO: is there any way we can avoid this?? It's resource intensive.
+          console.log(this.startLogic);
+          console.log(this.endLogic);
           if (this.dynamicPlacement) {
             this.calibrate();
           }
 
           var $el = this.el,
-          
-            focalPoint = this.useWindowFront ? $(window).scrollLeft() + $(window).width() : $el.offset().left + $el.width(),
+
+            focalPoint = $(window).scrollTop() + $(window).height(),
             animStart = $el.data('animation-start'),
             animEnd = $el.data('animation-end');
 
@@ -107,68 +109,6 @@
       };
       animObj.calibrate();
       return animObj;
-    }
-
-    // Put all animations into a single animations array.
-    function lcmPreparedAnimations() {
-      var animations = [];
-
-      // All Aboard animation.
-      animations.push(
-        animationFactory($('#allaboard-animation'), {
-          startLogic: function() {
-            return $(window).width() / 2 - 50;
-          },
-          endLogic: function() {
-            return $('#pane-home').offset().left + $('#pane-home').width();
-          }
-        })
-      );
-
-      // Bird animation.
-      animations.push(
-        animationFactory($('#bird-animation'), {
-          startLogic: function() {
-            return $(window).scrollLeft();
-          },
-          endLogic: function() {
-            return $(window).scrollLeft() + $(window).width();
-          },
-          dynamicPlacement: true,
-          reverseAnimation: true
-        })
-      );
-
-      // Jump animation.
-      animations.push(
-        animationFactory($('#jump-animation'), {
-          startLogic: function() {
-            // This is pretty much the ideal point to get the guy to be
-            // at the apex of the jump when viewing the blog.
-            return $(window).scrollLeft() - 500;
-          },
-          endLogic: function() {
-            return $(window).scrollLeft() + $(window).width();
-          },
-          dynamicPlacement: true,
-          reverseAnimation: true
-        })
-      );
-
-      // Dog animation.
-      animations.push(
-        animationFactory($('#dog-animation'), {
-          startLogic: function() {
-            return $(window).scrollLeft();
-          },
-          endLogic: function() {
-            return $(window).scrollLeft() + $(window).width();
-          },
-          dynamicPlacement: true,
-          reverseAnimation: true
-        })
-      );
-      return animations;
     }
   }
 })(jQuery);
