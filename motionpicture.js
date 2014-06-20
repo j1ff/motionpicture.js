@@ -41,6 +41,9 @@
           return (typeof this.endLogic === 'function') ? this.endLogic() : this.endLogic;
         },
 
+        getFocal: function() {
+          return (typeof this.focalPoint === 'function') ? this.focalPoint() : this.focalpoint;
+        },
         // Logic to determine which class should be applied to the element.
         setSprite: function() {
           if (this.dynamicPlacement) {
@@ -48,25 +51,19 @@
           }
 
           var $el = this.el,
-            focalPoint = $(window).scrollTop() + $(window).height(),
+            focalPoint = this.getFocal(),
             animStart = $el.data('animation-start'),
             animEnd = $el.data('animation-end'),
             animWidth = animEnd - animStart;
 
-          // todo: this might be able to be looped into the standard logic as part of the if else statement.
           if (this.loop == true) {
             var loopFocal = (focalPoint - animStart) % animWidth,
-            step = Math.round((loopFocal / animWidth) * ( this.steps));
+              step = Math.round((loopFocal / animWidth) * ( this.steps));
             this.setAnimationStep(step);
           }
           else if ((animStart <= focalPoint) && (animEnd >= focalPoint)) {
-            var offset = focalPoint - animStart;
-            if (this.reverseAnimation) {
-              var step = this.steps - Math.round((offset / animWidth) * this.steps);
-            }
-            else {
-              var step = Math.round((offset / animWidth) * this.steps);
-            }
+            var offset = focalPoint - animStart,
+              step = Math.round((offset / animWidth) * this.steps);
             this.setAnimationStep(step);
           }
           else if (focalPoint < animStart  ) {
