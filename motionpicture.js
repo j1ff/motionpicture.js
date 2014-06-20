@@ -12,6 +12,7 @@
         startLogic: $(window).height(),
         endLogic: $('html').height() - 1,
         focalPoint: $(window).scrollTop() + $(window).height(),
+        loop: false,
         hideOnComplete: true
       };
       var animationConfig = $.extend(defaults, config);
@@ -29,6 +30,8 @@
         events: [{'event': 'scroll', 'target': $(window)}],
         currentClass: '',
         hideOnComplete: animationConfig.hideOnComplete,
+        loop: animationConfig.loop,
+
 
         getEnd: function() {
           return (typeof this.endLogic === 'function') ? this.endLogic() : this.endLogic;
@@ -45,11 +48,17 @@
           var $el = this.el,
             focalPoint = $(window).scrollTop() + $(window).height(),
             animStart = $el.data('animation-start'),
-            animEnd = $el.data('animation-end');
+            animEnd = $el.data('animation-end'),
+            animWidth = animEnd - animStart;
 
-          if ((animStart <= focalPoint) && (animEnd >= focalPoint)) {
+          if (this.loop == true) {
+            var loopFocal = (focalPoint - animStart) % animWidth,
+            step = Math.round((loopFocal / animWidth) * ( this.steps));
+
+            this.setAnimationStep(step);
+          }
+          else if ((animStart <= focalPoint) && (animEnd >= focalPoint)) {
             var offset = focalPoint - animStart;
-            var animWidth = animEnd - animStart;
             if (this.reverseAnimation) {
               var step = this.steps - Math.round((offset / animWidth) * this.steps);
             }
@@ -66,6 +75,7 @@
           }
         },
 
+        // Att event listener for
         addEvents: function(el) {
           self = this;
           $.each(self.events, function() {
@@ -85,7 +95,6 @@
           this.step = stepInt > 9 ? stepInt : "0" + stepInt;
           this.el.attr('class', '');
           this.addClass(this.baseClass + this.step);
-          console.log(this.hideOnComplete);
           if (this.hideOnComplete) {
             if (this.step < 1 || this.step > this.steps) {
               this.hide();
