@@ -7,6 +7,7 @@
     animations.push(assembled);
     return this;
 
+    // Make an object responsible for keeping track of the sprite status.
     function animationFactory($el, config) {
       var defaults = {
         startLogic: $(window).height(),
@@ -32,14 +33,17 @@
         hideOnComplete: animationConfig.hideOnComplete,
         loop: animationConfig.loop,
 
-
-        getEnd: function() {
-          return (typeof this.endLogic === 'function') ? this.endLogic() : this.endLogic;
-        },
+        // Get the startpoint for the animation.
         getStart: function() {
           return (typeof this.startLogic === 'function') ? this.startLogic() : this.startLogic;
         },
 
+        // Get the endpoint for the animation.
+        getEnd: function() {
+          return (typeof this.endLogic === 'function') ? this.endLogic() : this.endLogic;
+        },
+
+        // Logic to determine which class should be applied to the element.
         setSprite: function() {
           if (this.dynamicPlacement) {
             this.calibrate();
@@ -51,6 +55,7 @@
             animEnd = $el.data('animation-end'),
             animWidth = animEnd - animStart;
 
+          // todo: this might be able to be looped into the standard logic as part of the if else statement.
           if (this.loop == true) {
             var loopFocal = (focalPoint - animStart) % animWidth,
             step = Math.round((loopFocal / animWidth) * ( this.steps));
@@ -75,7 +80,8 @@
           }
         },
 
-        // Att event listener for
+        // Set this element to compute the sprite position any time that one of
+        // the defined events triggers on one of the defined targets.
         addEvents: function(el) {
           self = this;
           $.each(self.events, function() {
@@ -85,11 +91,13 @@
           });
         },
 
+        // Get relevant coordinates for calculating spriteStep.
         calibrate: function() {
           var $el = this.el;
           $el.data('animation-start', this.getStart()).data('animation-end', this.getEnd());
         },
 
+        // Logic for manipulating dom so sprite is at the correct point.
         setAnimationStep: function(step) {
           var stepInt = parseInt(step);
           this.step = stepInt > 9 ? stepInt : "0" + stepInt;
@@ -104,22 +112,29 @@
             }
           }
         },
+
+        // Helper method for adding a class.
         addClass: function(newClass) {
           this.el.addClass(newClass);
           this.currentClass = newClass;
         },
+
+        // Helper function for hiding an element.
         hide: function() {
           this.el.hide();
           this.el.removeClass(this.currentClass);
           this.currentClass = '';
         },
+
+        // Helper function for showing an element.
         unhide: function() {
           this.el.show();
         }
       };
-      animObj.calibrate();
 
-      // Configurable events
+
+      // Initialization.
+      animObj.calibrate();
       animObj.addEvents(animObj.el);
       return animObj;
     }
