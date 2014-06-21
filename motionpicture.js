@@ -22,7 +22,8 @@
         baseClass: 'motionpicture',
         hidden: false,
         dynamicPlacement: false,
-        events: [{'event': 'scroll', 'target': $(window)}],
+        animationEvents: [{'event': 'scroll', 'target': $(window)}],
+        calibrationEvents: [{'event': 'resize', 'target': $(window)}],
         currentClass: '',
         pictureMethod: 'class',
 
@@ -80,9 +81,15 @@
         // the defined events triggers on one of the defined targets.
         addEvents: function(el) {
           var self = this;
-          $.each(self.events, function() {
+          $.each(self.animationEvents, function() {
             $(this.target).on(this.event, function() {
               self.setSprite();
+            });
+          });
+
+          $.each(self.calibrationEvents, function() {
+            $(this.target).on(this.event, function() {
+              self.calibrate();
             });
           });
           return this;
