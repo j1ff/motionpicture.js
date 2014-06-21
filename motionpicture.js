@@ -24,6 +24,7 @@
         dynamicPlacement: false,
         events: [{'event': 'scroll', 'target': $(window)}],
         currentClass: '',
+        pictureMethod: 'class',
 
         onLoad: function() {
           $.extend(this, config);
@@ -99,7 +100,13 @@
           var stepInt = parseInt(step);
           this.step = stepInt > 9 ? stepInt : "0" + stepInt;
           this.el.attr('class', '');
-          this.addClass(this.baseClass + this.step);
+          if (this.pictureMethod == 'class') {
+            this.addClass(this.baseClass + this.step);
+          }
+          else if (this.pictureMethod == 'offset') {
+            this.setOffset(this.step);
+          }
+
           if (this.hideOnComplete) {
             if (this.step < 1 || this.step > this.steps) {
               this.hide();
@@ -116,6 +123,13 @@
           this.el.addClass(newClass);
           this.currentClass = newClass;
           return this;
+        },
+
+        setOffset: function(step) {
+          var leftOffset = this.stepOffset.left,
+          topOffset = this.stepOffset.top;
+          this.el.css('background-position', -leftOffset * step + 'px ' + topOffset * step + 'px');
+          console.log('leftOffset: ' + (leftOffset * step));
         },
 
         // Helper function for hiding an element.
