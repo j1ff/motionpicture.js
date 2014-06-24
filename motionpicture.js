@@ -26,6 +26,7 @@
         calibrationEvents: [{'event': 'resize', 'target': $(window)}],
         currentClass: '',
         pictureMethod: 'class',
+        stepOffsets: {},
 
         onLoad: function() {
           $.extend(this, config);
@@ -111,7 +112,13 @@
             this.addClass(this.baseClass + this.step);
           }
           else if (this.pictureMethod == 'offset') {
-            this.setOffset(this.step);
+            var leftOffset = this.stepOffset.left,
+              topOffset = this.stepOffset.top;
+            this.setOffset({left: leftOffset, top: topOffset}, this.step);
+          }
+
+          if (!$.isEmptyObject(this.stepOffsets) && this.stepOffsets[step]) {
+            this.setOffset(this.stepOffsets[step]);
           }
 
           if (this.hideOnComplete) {
@@ -132,11 +139,9 @@
           return this;
         },
 
-        setOffset: function(step) {
-          var leftOffset = this.stepOffset.left,
-          topOffset = this.stepOffset.top;
-          this.el.css('background-position', -leftOffset * step + 'px ' + topOffset * step + 'px');
-          console.log('leftOffset: ' + (leftOffset * step));
+        setOffset: function(stepOffset, multiplier) {
+          multiplier = typeof multiplier === 'undefined' ? 1 : multiplier;
+          this.el.css('background-position', -stepOffset.left * multiplier + 'px ' + stepOffset.top * multiplier + 'px');
         },
 
         // Helper function for hiding an element.
