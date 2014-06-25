@@ -1,6 +1,9 @@
 (function($){
   $.fn.motionPicture = function(options){
-    animationFactory(this, options);
+    this.each(function() {
+      animationFactory($(this), options)
+    });
+
     // Make an object responsible for keeping track of the sprite status.
     function animationFactory($el, config) {
       var animObj = {
