@@ -23,7 +23,6 @@
         step: 0,
         steps: 0,
         baseClass: 'motionpicture',
-        hidden: false,
         dynamicPlacement: false,
         animationEvents: [{'event': 'scroll', 'target': $(window)}],
         calibrationEvents: [{'event': 'resize', 'target': $(window)}],
@@ -36,40 +35,30 @@
           this.addEvents(this.el).calibrate();
           return this;
         },
-
-        // Get the startpoint for the animation.
-        getStart: function() {
-          return (typeof this.startLogic === 'function') ? this.startLogic() : this.startLogic;
+        get: function(option) {
+          return (typeof this[option] === 'function') ? this[option]() : this[option];
         },
 
-        // Get the endpoint for the animation.
-        getEnd: function() {
-          return (typeof this.endLogic === 'function') ? this.endLogic() : this.endLogic;
-        },
-
-        getFocal: function() {
-          return (typeof this.focalPoint === 'function') ? this.focalPoint() : this.focalpoint;
-        },
         // Logic to determine which class should be applied to the element.
         setSprite: function() {
-          if (this.dynamicPlacement) {
+          if (this.get('dynamicPlacement')) {
             this.calibrate();
           }
 
           var $el = this.el,
-            focalPoint = this.getFocal(),
+            focalPoint = this.get('focalPoint'),
             animStart = $el.data('animation-start'),
             animEnd = $el.data('animation-end'),
             animWidth = animEnd - animStart;
 
-          if (this.loop == true) {
+          if (this.get('loop') == true) {
             var loopFocal = (focalPoint - animStart) % animWidth,
-              step = Math.round((loopFocal / animWidth) * ( this.steps));
+              step = Math.round((loopFocal / animWidth) * ( this.get('steps')));
             this.setAnimationStep(step);
           }
           else if ((animStart <= focalPoint) && (animEnd >= focalPoint)) {
             var offset = focalPoint - animStart,
-              step = Math.round((offset / animWidth) * this.steps);
+              step = Math.round((offset / animWidth) * this.get('steps'));
             this.setAnimationStep(step);
           }
           else if (focalPoint < animStart  ) {
@@ -85,13 +74,13 @@
         // the defined events triggers on one of the defined targets.
         addEvents: function(el) {
           var self = this;
-          $.each(self.animationEvents, function() {
+          $.each(self.get('animationEvents'), function() {
             $(this.target).on(this.event, function() {
               self.setSprite();
             });
           });
 
-          $.each(self.calibrationEvents, function() {
+          $.each(self.get('calibrationEvents'), function() {
             $(this.target).on(this.event, function() {
               self.calibrate();
             });
@@ -102,7 +91,7 @@
         // Get relevant coordinates for calculating spriteStep.
         calibrate: function() {
           var $el = this.el;
-          $el.data('animation-start', this.getStart()).data('animation-end', this.getEnd());
+          $el.data('animation-start', this.get('startLogic')).data('animation-end', this.get('endLogic'));
           return this;
         },
 
@@ -111,20 +100,20 @@
           var stepInt = parseInt(step);
           this.step = stepInt > 9 ? stepInt : "0" + stepInt;
           this.el.attr('class', '');
-          if (this.pictureMethod == 'class') {
-            this.addClass(this.baseClass + this.step);
+          if (this.get('pictureMethod') == 'class') {
+            this.addClass(this.get('baseClass') + this.step);
           }
-          else if (this.pictureMethod == 'offset') {
+          else if (this.get('pictureMethod') == 'offset') {
             var leftOffset = this.stepOffset.left,
               topOffset = this.stepOffset.top;
             this.setOffset({left: leftOffset, top: topOffset}, this.step);
           }
 
-          if (!$.isEmptyObject(this.stepOffsets) && this.stepOffsets[step]) {
-            this.setOffset(this.stepOffsets[step]);
+          if (!$.isEmptyObject(this.get('stepOffsets')) && this.stepOffsets[step]) {
+            this.setOffset(this.get('stepOffsets')[step]);
           }
 
-          if (this.hideOnComplete) {
+          if (this.get('hideOnComplete')) {
             if (this.step < 1 || this.step > this.steps) {
               this.hide();
             }
@@ -160,7 +149,6 @@
           this.el.show();
         }
       };
-
       return animObj.onLoad();
     }
   }
