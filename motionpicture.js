@@ -138,15 +138,15 @@
 
         // Helper function for hiding an element.
         hide: function() {
-          this.el.hide();
-          this.el.removeClass(this.currentClass);
+          this.el.css('visibility', 'hidden');
+          this.el.removeClass(this.get('currentClass'));
           this.currentClass = '';
           return this;
         },
 
         // Helper function for showing an element.
         unhide: function() {
-          this.el.show();
+          this.el.css('visibility', 'visible');
         }
       };
       return animObj.onLoad();
