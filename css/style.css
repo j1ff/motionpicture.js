@@ -1,0 +1,25 @@
+body > header, body > footer {
+  background: #5f6273;
+  color: #e2e1e9;
+}
+
+.dark-content {
+  background: #e2e1e9;
+}
+
+.light-content {
+  background: #eeeeee;
+}
+
+h4 small {
+  font-size: 60%;
+  color: #888;
+}
+
+footer.container {
+  border-top: 1px dashed #aaa;
+}
+
+.left-bumper, .right-bumper {
+  background: #5f6273;
+}

@@ -1,0 +1,35 @@
+@import "compass/utilities/sprites";
+@import "squirtle/*.png";
+@include all-squirtle-sprites;
+
+#squirtle {
+  width: image-width("squirtle/squirtle1.png");
+  height: image-height("squirtle/squirtle1.png");
+  display: block;
+  margin: 0 auto;
+}
+
+//.squirtle-scroll-wrap {
+//  width: 100%;
+//  overflow-x: scroll;
+//}
+.squirtle-scroll {
+  width: 1000%;
+  height: 1px;
+}
+
+.squirtle-scroll-wrap {
+  cursor: ew-resize;
+  margin: 1em inherit !important;
+  h4 {
+    width: 1000%;
+    position: relative;
+    div {
+      width: 10%;
+      display: inline-block;
+      &.last {
+        width: 9%;
+      }
+    }
+  }
+}

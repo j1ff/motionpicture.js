@@ -1,0 +1,13 @@
+@import "variables";
+%dark {
+  background: $darkBG;
+  color: $darkText;
+}
+
+%dark-content {
+  background: $darkContentBG;
+}
+
+%light-content {
+  background: $lightContentBG;
+}

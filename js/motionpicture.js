@@ -59,6 +59,7 @@
           else if ((animStart <= focalPoint) && (animEnd >= focalPoint)) {
             var offset = focalPoint - animStart,
               step = Math.round((offset / animWidth) * this.get('steps'));
+            step = step < 1 ? 1 : step;
             this.setAnimationStep(step);
           }
           else if (focalPoint < animStart  ) {
@@ -98,7 +99,7 @@
         // Logic for manipulating dom so sprite is at the correct point.
         setAnimationStep: function(step) {
           var stepInt = parseInt(step);
-          this.step = stepInt > 9 ? stepInt : "0" + stepInt;
+          this.step = stepInt;
           this.el.attr('class', '');
           if (this.get('pictureMethod') == 'class') {
             this.addClass(this.get('baseClass') + this.step);
