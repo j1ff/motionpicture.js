@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Parameters &mdash; motionpicture.js &mdash; A jquery plugin utilizing sprites to make animations</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="http://j1ff.github.io/motionpicture.js/components/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+        <link href="http://j1ff.github.io/motionpicture.js/components/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet" type="text/css" />
+        <link href="http://j1ff.github.io/motionpicture.js/css/style.css" rel="stylesheet" type="text/css" />
+        <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+        <!--[if lt IE 9]>
+            <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+        <![endif]-->
+        <link rel="stylesheet" href="http://j1ff.github.io/motionpicture.js/components/highlightjs/styles/github.css" />
+        <link rel="alternate" type="application/atom+xml" href="http://j1ff.github.io/motionpicture.js/atom.xml" title="motionpicture.js activity feed" />
+        <style>
+        /** quick fix because bootstrap <pre> has a background-color. */
+        pre code { background-color: inherit; }
+        </style>
+
+        <!-- get any stylsheets required in post -->
+            </head>
+    <body>
+        <header>
+            <!--<div class="navbar navbar-inverse navbar-fixed-top">-->
+                <!--<div class="navbar-inner">-->
+                    <!--<div class="container-fluid">-->
+                        <!--<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">-->
+                            <!--<span class="icon-bar"></span>-->
+                            <!--<span class="icon-bar"></span>-->
+                            <!--<span class="icon-bar"></span>-->
+                        <!--</a>-->
+                        <!--<a class="brand" href="http://j1ff.github.io/motionpicture.js/">motionpicture.js</a>-->
+                        <!--<div class="nav-collapse collapse">-->
+                            <!--<ul class="nav">-->
+                                <!--<li><a href="http://j1ff.github.io/motionpicture.js/blog">Posts Archive</a></li>-->
+                                <!--<li><a href="http://j1ff.github.io/motionpicture.js/blog/categories">Categories</a></li>-->
+                                <!--<li><a href="http://j1ff.github.io/motionpicture.js/blog/tags">Tags</a></li>-->
+                                <!--<li><a href="http://j1ff.github.io/motionpicture.js/about">About</a></li>-->
+                            <!--</ul>-->
+                        <!--</div>&lt;!&ndash;/.nav-collapse &ndash;&gt;-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</div>-->
+        </header>
+        <div class="mainContent container">
+            <div class="row-fluid">
+                <div class="span8">
+                    <h1>Parameters</h1>
+
+<hr />
+
+<h2><a href="#animationProgress">#</a><a name="animationProgress"></a>Animation Progress Control</h2>
+
+<p>These parameters determine how and when the animation progresses from beginning to end.</p>
+
+<h4><a href="#steps">#</a><a name="steps"></a>steps <code>*required</code></h4>
+
+<ul>
+<li>The number of steps in the animation.</li>
+</ul>
+
+<pre><code class="javascript">// No default value.
+// Enter the number of frames your sprite has.
+</code></pre>
+
+<h4><a href="#focalPoint">#</a><a name="focalPoint"></a>focalPoint</h4>
+
+<ul>
+<li>A numeric value that returns the numerator in the animation progress equation.</li>
+<li>This value is returned every time that an <code>animationEvents</code> event is triggered.</li>
+</ul>
+
+<pre><code class="javascript">// Default value - The bottom of the window.
+focalPoint: function() {
+  return $(window).scrollTop() + $(window).height();
+},
+</code></pre>
+
+<h4><a href="#startLogic">#</a><a name="startLogic"></a>startLogic</h4>
+
+<ul>
+<li>The numeric value that should be considered the starting point of the animation.</li>
+<li>This value is returned every time a <code>calibrationEvents</code> event is triggered.</li>
+</ul>
+
+<pre><code class="javascript">// Default value - The height of the window.
+startLogic: function() {
+  return $(window).height()
+},
+</code></pre>
+
+<h4><a href="#endLogic">#</a><a name="endLogic"></a>endLogic</h4>
+
+<ul>
+<li>The numeric value that should be considered the end point of the animation.</li>
+<li>This value is returned every time a <code>calibrationEvents</code> event is triggered.</li>
+</ul>
+
+<pre><code class="javascript">// Default value - The height of the page. Subtract 1px because it's helpful for letting an animation
+// fully complete.
+endLogic: function() {
+  return $('html').height() - 1;
+},
+</code></pre>
+
+<hr />
+
+<h2><a href="#animation">#</a><a name="animation"></a>Animation Behavior</h2>
+
+<p>Basic behavior parameters</p>
+
+<h4><a href="#loop">#</a><a name="loop"></a>loop</h4>
+
+<ul>
+<li>If set to true, then the animation will loop around instead of end once the <code>focalPoint</code> passes the <code>endLogic</code></li>
+</ul>
+
+<pre><code class="javascript">// Default value
+loop: false,
+</code></pre>
+
+<h4><a href="#hideOnComplete">#</a><a name="hideOnComplete"></a>hideOnComplete</h4>
+
+<ul>
+<li>If set to true, then use <code>hide()</code> on the element once the animation has completed.</li>
+</ul>
+
+<pre><code class="javascript">// Default value
+hideOnComplete: true,
+</code></pre>
+
+<hr />
+
+<h2><a href="#sprites">#</a><a name="sprites"></a>Sprite Offset Handling</h2>
+
+<p>Set the underlying method for how the background offsets get handled when animating.</p>
+
+<h4><a href="#pictureMethod">#</a><a name="pictureMethod"></a>pictureMethod</h4>
+
+<ul>
+<li>Set whether the plugin should add/remove classes to the element, or set <code>background-position</code> directly using the <code>css()</code> method.</li>
+<li>Possible values:
+
+<ul>
+<li>class</li>
+<li>offset</li>
+</ul></li>
+</ul>
+
+<pre><code class="javascript">// Default value
+pictureMethod: class,
+</code></pre>
+
+<h4><a href="#baseClass">#</a><a name="baseClass"></a>baseClass</h4>
+
+<ul>
+<li><strong>Only relevant if <code>pictureMethod</code> is set to 'class'</strong></li>
+<li>If set, the value will be added as a class to the element, with the current step appended to the value</li>
+<li>ex: a <code>baseClass</code> of <code>motionpicture</code> will turn into <code>motionpicture1</code>, and the numeric value at the end will change with each step.</li>
+<li>If set, then you probably want to make sure that individual <code>background-position</code> parameters are set for each class that could be used.</li>
+</ul>
+
+<pre><code class="javascript">// Default value
+baseClass: 'motionpicture',
+</code></pre>
+
+<h4><a href="#stepOffsets">#</a><a name="stepOffsets"></a>stepOffsets</h4>
+
+<ul>
+<li><strong>Only relevant if <code>pictureMethod</code> is set to 'offset'</strong></li>
+<li>An object containing objects which store parameters for individual offsets. Keyed by step number.</li>
+<li>Allows you to set offsets for individual steps.</li>
+<li>Only use <code>left</code> and <code>top</code> offsets.</li>
+</ul>
+
+<pre><code class="javascript">// Default value - no special offsets.
+stepOffsets: {},
+</code></pre>
+
+<pre><code class="javascript">// example - special offset for second step.
+stepOffsets: {2: {left: 100, top: 400}},
+</code></pre>
+
+<h4><a href="#dynamicPlacement">#</a><a name="dynamicPlacement"></a>dynamicPlacement</h4>
+
+<ul>
+<li>If enabled, any time an <code>animationEvents</code> event is triggered <code>startLogic</code> and <code>endLogic</code> will be re-run.</li>
+<li>This is really only neede if your <code>startLogic</code> and <code>endLogic</code> reference points are changing a lot (for example if this is happening inside of a parallaxy page element).</li>
+</ul>
+
+<pre><code class="javascript">// Default value
+dynamicPlacement: false,
+</code></pre>
+
+<hr />
+
+<h2><a href="#events">#</a><a name="events"></a>Events</h2>
+
+<ul>
+<li>Determines what causes the animation to progress, and reference values to be set.</li>
+</ul>
+
+<h4><a href="#animationEvents">#</a><a name="animationEvents"></a>animationEvents</h4>
+
+<ul>
+<li>An array containing at least one object defining what event should trigger the animation, and what the target for the event must be.</li>
+</ul>
+
+<pre><code class="javascript">// Default value - Trigger animation on scroll
+animationEvents: [{'event': 'scroll', 'target': $(window)}],
+</code></pre>
+
+<h4><a href="#calibrationEvents">#</a><a name="calibrationEvents"></a>calibrationEvents</h4>
+
+<ul>
+<li>An array containing at least one object defining what event(s) should allow <code>startLogic</code> and <code>endLogic</code></li>
+</ul>
+
+<pre><code class="javascript">// Default value - Update parameters when the window is resized.
+calibrationEvents: [{'event': 'resize', 'target': $(window)}],
+</code></pre>
+                </div>
+                <div class="span4 sidebar">
+                    <div class="well">
+                        <h4>motionpicture.js <small>A jquery plugin utilizing sprites to make animations</small></h4>
+                    </div>
+                    <div class="well sidebar-nav">
+                        <h4>Links</h4>
+                        <ul class="nav">
+                            <li><a href="http://j1ff.com">j1ff.com</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <footer class="container">
+            &copy; 2014 motionpicture.js
+        </footer>
+
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+        <script>window.jQuery || document.write('<script src="http://j1ff.github.io/motionpicture.js/components/jquery/jquery.min.js"><\/script>')</script>
+        <script src="http://j1ff.github.io/motionpicture.js/components/bootstrap/js/bootstrap.min.js"></script>
+                
+                <script src="http://j1ff.github.io/motionpicture.js/components/highlightjs/highlight.pack.js"></script>
+        <script>hljs.initHighlightingOnLoad();</script>
+        <script>
+            (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+            })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+            ga('create', 'UA-52749053-1', 'auto');
+            ga('send', 'pageview');
+
+        </script>
+    </body>
+</html>
